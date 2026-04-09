@@ -1,35 +1,35 @@
 # Design System & Colors (DiploGO)
 
-Для создания эффекта геймификации и удержания внимания, DiploGO использует современную палитру, основанную на темной теме с яркими неоновыми акцентами.
+To create a gamification effect and retain user attention, DiploGO uses a modern color palette based on a dark theme with bright neon accents.
 
-## Палитра (Цветокор)
+## Palette (Color scheme)
 
-- **Primary Background (Dark)**: `#121212` — Основной фон приложения.
-- **Secondary Background (Surface)**: `#1E1E1E` — Карточки тем, контейнеры, модальные окна.
-- **Accent Color (Neon Purple)**: `#BB86FC` — Основной акцентный цвет для кнопок, активных состояний, иконок.
-- **Secondary Accent (Teal)**: `#03DAC6` — Цвет для отображения правильных ответов, успешных действий и стриков.
-- **Error / Incorrect (Coral Red)**: `#CF6679` — Цвет для неправильных ответов и сообщений об ошибках.
-- **Text Primary**: `#FFFFFF` — Заголовки, основной текст.
-- **Text Secondary**: `#B3B3B3` — Подсказки, второстепенный текст.
+- **Primary Background (Dark)**: `#121212` — Main background of the application.
+- **Secondary Background (Surface)**: `#1E1E1E` — Topic cards, containers, modal windows.
+- **Accent Color (Neon Purple)**: `#BB86FC` — Main accent color for buttons, active states, icons.
+- **Secondary Accent (Teal)**: `#03DAC6` — Color for displaying correct answers, successful actions, and streaks.
+- **Error / Incorrect (Coral Red)**: `#CF6679` — Color for wrong answers and error messages.
+- **Text Primary**: `#FFFFFF` — Headings, main text.
+- **Text Secondary**: `#B3B3B3` — Tooltips, secondary text.
 
-## UI Гайдлайны
+## UI Guidelines
 
-### Кнопки (Buttons)
-- Кнопки должны иметь скругление `borderRadius: 12`.
-- Главные кнопки используют цвет `Accent Color` с темным текстом.
-- При нажатии обязателен легкий эффект уменьшения (scale `0.95`).
+### Buttons
+- Buttons must have a border radius `borderRadius: 12`.
+- Primary buttons use the `Accent Color` with dark text.
+- A slight scale down effect upon pressing is mandatory (scale `0.95`).
 
 ### Progress Bar
-- Гладкая заливка цветом `Secondary Accent (Teal)`.
-- Ожидаются анимации заполнения при изменении значения.
+- Smooth fill with the `Secondary Accent (Teal)` color.
+- Fill animations are expected upon value change.
 
-### Карточки Тем (Topic Cards)
-- Фон: `#1E1E1E`.
-- Тень: легкая тёмная тень `0px 4px 10px rgba(0,0,0,0.5)`, чтобы они "парили" над фоном.
+### Topic Cards
+- Background: `#1E1E1E`.
+- Shadow: slight dark shadow `0px 4px 10px rgba(0,0,0,0.5)`, so they "float" over the background.
 
-### Типографика
-- Рекомендуется использовать шрифты **Inter** или **Roboto** для читаемости.
-- Заголовки (H1/H2) должны быть толстыми (bold 700) и выразительными.
+### Typography
+- It is recommended to use **Inter** or **Roboto** fonts for readability.
+- Headings (H1/H2) should be bold (700) and expressive.
 
-## Анимации
-- **Стрик (Streak)**: При получении нового уровня стрика должна проигрываться анимация легкого пульсирования (шрифта/иконки) и изменения цвета.
+## Animations
+- **Streak**: When unlocking a new streak level, an animation of a slight pulsation (of font/icon) and a color change should be played.

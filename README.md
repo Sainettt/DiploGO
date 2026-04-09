@@ -1,30 +1,30 @@
 # DiploGO
 
-**DiploGO** — это игровой/соревновательный инструмент, предназначенный для интерактивного изучения новых тем. Пользователи могут создавать собственные темы, добавлять к ним вопросы или позволить ИИ (AI) сделать это за них, а затем отвечать на вопросы, получать очки, набивать стрики (Streaks) и соревноваться.
+**DiploGO** is a gaming/competitive tool designed for interactive learning of new topics. Users can create their own topics, add questions to them or let AI do it for them, and then answer questions, earn points, build streaks, and compete.
 
-## Архитектура
-Проект состоит из двух основных частей:
-- `mobile/`: Клиентское приложение на **React Native (Expo)** и **TypeScript**.
-- `api/`: Серверное приложение на **NestJS**, взаимодействующее с **PostgreSQL** через **Prisma ORM**.
+## Architecture
+The project consists of two main parts:
+- `mobile/`: Client application built with **React Native (Expo)** and **TypeScript**.
+- `api/`: Server application built with **NestJS**, interacting with **PostgreSQL** via **Prisma ORM**.
 
-## Документация
-В директории `docs/` находится подробное описание и гайдлайны по проекту:
-- [idea-and-tasks.md](docs/idea-and-tasks.md) — Основная идея и дорожная карта (Roadmap) проекта.
-- [design-system.md](docs/design-system.md) — Цветовая палитра и UI Гайдлайны приложения.
-- [expo.md](docs/expo.md) — Документация и лучшие практики для клиентской части.
-- [nest.md](docs/nest.md) — Документация и лучшие практики для серверной части.
+## Documentation
+The `docs/` directory contains a detailed description and guidelines for the project:
+- [idea-and-tasks.md](docs/idea-and-tasks.md) — Main concept and project Roadmap.
+- [design-system.md](docs/design-system.md) — Color palette and UI Guidelines of the app.
+- [expo.md](docs/expo.md) — Documentation and best practices for the mobile client.
+- [nest.md](docs/nest.md) — Documentation and best practices for the server backend.
 
-## Как запустить
+## How to run
 
 ### Backend (NestJS)
-1. Перейдите в папку сервера: `cd api`
-2. Установите зависимости: `npm install`
-3. Настройте вашу базу данных PostgreSQL (укажите `DATABASE_URL` в `.env`).
-4. Примените миграции Prisma: `npx prisma migrate dev`
-5. Запустите сервер: `npm run start:dev`
+1. Go to the server folder: `cd api`
+2. Install dependencies: `npm install`
+3. Configure your PostgreSQL database (specify `DATABASE_URL` in `.env`).
+4. Apply Prisma migrations: `npx prisma migrate dev`
+5. Start the server: `npm run start:dev`
 
 ### Mobile (Expo)
-1. Перейдите в папку клиента: `cd mobile`
-2. Установите зависимости: `npm install`
-3. Запустите Expo-сервер: `npm start`
-4. Отсканируйте появившийся QR-код с помощью приложения **Expo Go** на вашем мобильном устройстве (или нажмите `i` для запуска в iOS-симуляторе, `a` для Android-эмулятора).
+1. Go to the client folder: `cd mobile`
+2. Install dependencies: `npm install`
+3. Start the Expo server: `npm start`
+4. Scan the QR code with the **Expo Go** app on your mobile device (or press `i` to launch iOS simulator, `a` for Android emulator).

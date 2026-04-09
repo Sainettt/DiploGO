@@ -1,27 +1,27 @@
 # Expo (React Native) Client
 
-Эта директория (когда будет создана `mobile`) содержит клиентскую часть приложения DiploGO, написанную на React Native с использованием фреймворка Expo.
+This directory (when `mobile` is created) contains the client part of the DiploGO application, written in React Native using the Expo framework.
 
-## Стек
+## Stack
 - **Expo Framework**
 - **TypeScript**
-- **React Navigation** (рекомендуется для маршрутизации)
-- **Axios** или **Fetch API** (для связи с сервером)
+- **React Navigation** (recommended for routing)
+- **Axios** or **Fetch API** (for backend communication)
 
-## Структура файлов (Предлагаемая)
+## Directory Structure (Proposed)
 
 `mobile/`
-- `assets/` — Изображения, шрифты и иконки.
+- `assets/` — Images, fonts, and icons.
 - `src/`
-  - `components/` — Переиспользуемые элементы (Кнопки, Карточки, Инпуты).
-  - `screens/` — Основные экраны (Login, Home, TopicDetails, GameSession).
-  - `navigation/` — Конфигурация React Navigation (Stack, Tabs).
-  - `api/` — Сервисы для вызова бекенда.
-  - `store/` или `context/` — Управление состоянием (Zustand/Redux/Context API).
-  - `utils/` — Хелперы (форматирование времени, расчеты).
+  - `components/` — Reusable elements (Buttons, Cards, Inputs).
+  - `screens/` — Main screens (Login, Home, TopicDetails, GameSession).
+  - `navigation/` — React Navigation configuration (Stack, Tabs).
+  - `api/` — Services for making backend calls.
+  - `store/` or `context/` — State management (Zustand/Redux/Context API).
+  - `utils/` — Helpers (time formatting, calculations).
 
-## Лучшие практики
-1. **Абсолютные пути**: Настройте `babel.config.js` и `tsconfig.json` для использования алиасов (например, `~components/Button`).
-2. **Типизация**: Строгая типизация компонентов через `interface` и `type`. Не используйте `any`.
-3. **Разделение логики и UI**: Используйте кастомные хуки (`hooks/`) для инкапсуляции логики работы с экранами.
-4. **Стилизация**: Для стилей используйте `StyleSheet.create` или специализированные библиотеки вроде NativeWind (Tailwind для RN), сохраняя верность Design System.
+## Best Practices
+1. **Absolute paths**: Configure `babel.config.js` and `tsconfig.json` to use aliases (e.g., `~components/Button`).
+2. **Typing**: Strict typing of components through `interface` and `type`. Avoid using `any`.
+3. **Separation of logic and UI**: Use custom hooks (`hooks/`) to encapsulate screen logic.
+4. **Styling**: For styling, use `StyleSheet.create` or specialized libraries like NativeWind (Tailwind for RN), while staying consistent with the Design System.

@@ -1,33 +1,33 @@
 # DiploGO - Idea & Tasks
 
-## Идея (Concept)
-**DiploGO** — это игровой/соревновательный инструмент, предназначенный для интерактивного обучения и проверки знаний. 
-Пользователь может:
-1. Создавать собственные темы (топики) для изучения.
-2. Вписывать вручную или **генерировать с помощью AI** вопросы к созданным темам.
-3. Участвовать в игровом процессе, отвечая на сгенерированные вопросы.
-4. Отслеживать свой прогресс (Progress Bar), формировать стрики (Streaks) за ежедневную активность или серию правильных ответов.
-5. Соревноваться (потенциально с другими игроками) за лучшие показатели.
+## Concept
+**DiploGO** is a gamified/competitive tool for interactive learning and knowledge testing.
+Users can:
+1. Create their own topics for learning.
+2. Manually write or **generate using AI** questions for the created topics.
+3. Participate in gameplay by answering generated questions.
+4. Track their progress (via Progress Bar) and build Streaks for daily activity or a sequence of correct answers.
+5. Compete (potentially with other players) for the best results.
 
-## Roadmap (Задачи)
+## Roadmap (Tasks)
 
-### Phase 1: MVP (Минимально жизнеспособный продукт)
-- [ ] Базовая регистрация / авторизация пользователей.
-- [ ] CRUD дляТем (создание, удаление, редактирование).
-- [ ] Интерфейс написания вопросов вручную.
-- [ ] Игровой экран (демонстрация вопроса, варианты ответов, результат).
+### Phase 1: MVP (Minimum Viable Product)
+- [ ] Basic user registration / authentication.
+- [ ] Topic CRUD (create, delete, edit).
+- [ ] Interface for manually writing questions.
+- [ ] Game screen (displaying question, answer options, result).
 
 ### Phase 2: AI & Gamification
-- [ ] Интеграция AI-провайдера (OpenAI / Anthropic / Gemini) для автоматической генерации вопросов по теме.
-- [ ] Внедрение системы **Streaks** (удержание пользователя).
-- [ ] Глобальный Progress Bar для темы (насколько тема изучена).
-- [ ] Анимации и сочный UI для процесса ответов.
+- [ ] Integration of an AI provider (OpenAI / Anthropic / Gemini) to automatically generate topic questions.
+- [ ] Implementation of the **Streaks** system (user retention).
+- [ ] Global Progress Bar for a topic (how well the topic has been learned).
+- [ ] Animations and rich UI for the answering process.
 
 ### Phase 3: Social & Competitive
-- [ ] Таблица лидеров (Leaderboard).
-- [ ] Сравнение своих результатов с другими пользователями.
-- [ ] Дуэли: кто ответит на большее количество вопросов за отведенное время.
+- [ ] Leaderboard.
+- [ ] Comparing own results with other users.
+- [ ] Duels: who can answer more questions in the allotted time.
 
-## Заметки по реализации
-- Backend (NestJS) должен обрабатывать логику расчета стриков и хранить статистку ответов (кто, на какой вопрос, сколько времени думал).
-- Mobile App (Expo) должно делать упор на плавные анимации перехода между вопросами, так как это ключевой элемент удержания.
+## Implementation Notes
+- The Backend (NestJS) must handle the logic of streak calculation and store answer statistics (who, which question, how much time to think).
+- The Mobile App (Expo) should emphasize smooth transition animations between questions, as this is a key element of user retention.
