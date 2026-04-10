@@ -10,6 +10,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // Throw an error if extraneous properties are provided
   }));
 
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableCors(); // Allow requests from our frontend
+  await app.listen(process.env.PORT ?? 4000); // 4000 to match api.client.ts
 }
 bootstrap();
