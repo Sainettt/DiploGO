@@ -11,5 +11,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: diplogo-api
+    restart: always
+    env_file:
+      - ./api/.env
+    ports:
+      - '4000:4000'
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
