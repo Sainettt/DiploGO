@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { ThemeButton } from '../src/components/ThemeButton';
 import { AntDesign } from '@expo/vector-icons';
@@ -39,21 +39,21 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      className="flex-1 bg-[#121212] justify-center px-6"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.formContainer}>
+      <View className="w-full mb-20">
         {/* Header */}
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>Welcome back.</Text>
-          <Text style={styles.subtitle}>Log in to continue your journey.</Text>
+        <View className="mb-10">
+          <Text className="text-[32px] font-bold text-white mb-2">Welcome back.</Text>
+          <Text className="text-base text-[#B3B3B3]">Log in to continue your journey.</Text>
         </View>
 
         {/* Inputs */}
-        <View style={styles.inputGroup}>
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        <View className="mb-6 gap-4">
+          {error ? <Text className="text-[#CF6679] text-sm -mb-2">{error}</Text> : null}
           <TextInput
-            style={styles.input}
+            className="bg-[#1E1E1E] rounded-xl px-4 py-[18px] text-base text-white border border-[#333333]"
             placeholder="Email address"
             placeholderTextColor="#B3B3B3"
             keyboardType="email-address"
@@ -62,7 +62,7 @@ export default function LoginScreen() {
             onChangeText={setEmail}
           />
           <TextInput
-            style={styles.input}
+            className="bg-[#1E1E1E] rounded-xl px-4 py-[18px] text-base text-white border border-[#333333]"
             placeholder="Password"
             placeholderTextColor="#B3B3B3"
             secureTextEntry
@@ -72,13 +72,13 @@ export default function LoginScreen() {
         </View>
 
         {/* Actions */}
-        <View style={styles.actionGroup}>
+        <View className="gap-4">
           <ThemeButton title="Log In" onPress={handleLogin} />
           
-          <View style={styles.divider}>
-            <View style={styles.line} />
-            <Text style={styles.dividerText}>OR</Text>
-            <View style={styles.line} />
+          <View className="flex-row items-center my-2">
+            <View className="flex-1 h-[1px] bg-[#333333]" />
+            <Text className="text-[#B3B3B3] px-4 text-sm font-semibold">OR</Text>
+            <View className="flex-1 h-[1px] bg-[#333333]" />
           </View>
 
           <ThemeButton 
@@ -90,11 +90,11 @@ export default function LoginScreen() {
         </View>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+        <View className="flex-row justify-center mt-10">
+          <Text className="text-[#B3B3B3] text-sm">Don't have an account? </Text>
           <Link href="/register" asChild>
             <TouchableOpacity>
-              <Text style={styles.linkText}>Sign up</Text>
+              <Text className="text-[#BB86FC] text-sm font-bold">Sign up</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -102,81 +102,3 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#121212', // Primary background
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  formContainer: {
-    width: '100%',
-    marginBottom: 80, // Offset to push the fields slightly above center as requested
-  },
-  headerContainer: {
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#B3B3B3',
-  },
-  inputGroup: {
-    marginBottom: 24,
-    gap: 16,
-  },
-  input: {
-    backgroundColor: '#1E1E1E', // Surface color
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    fontSize: 16,
-    color: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#333333',
-  },
-  errorText: {
-    color: '#CF6679', // Material Design Dark Theme Error Color
-    fontSize: 14,
-    marginBottom: -8,
-  },
-  actionGroup: {
-    gap: 16,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#333333',
-  },
-  dividerText: {
-    color: '#B3B3B3',
-    paddingHorizontal: 16,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
-  footerText: {
-    color: '#B3B3B3',
-    fontSize: 14,
-  },
-  linkText: {
-    color: '#BB86FC', // Neon purple accent
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});

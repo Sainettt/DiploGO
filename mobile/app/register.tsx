@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { ThemeButton } from '../src/components/ThemeButton';
 import { AntDesign } from '@expo/vector-icons';
@@ -54,25 +54,25 @@ export default function RegisterScreen() {
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      className="flex-1 bg-[#121212]"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView 
-        contentContainerStyle={styles.scrollContainer}
+        contentContainerClassName="grow justify-center px-6"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.formContainer}>
+        <View className="w-full mb-[60px]">
           {/* Header */}
-          <View style={styles.headerContainer}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join DiploGO and start learning today.</Text>
+          <View className="mb-10">
+            <Text className="text-[32px] font-bold text-white mb-2">Create Account</Text>
+            <Text className="text-base text-[#B3B3B3]">Join DiploGO and start learning today.</Text>
           </View>
 
           {/* Inputs */}
-          <View style={styles.inputGroup}>
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+          <View className="mb-6 gap-4">
+            {error ? <Text className="text-[#CF6679] text-sm -mb-2">{error}</Text> : null}
             <TextInput
-              style={styles.input}
+              className="bg-[#1E1E1E] rounded-xl px-4 py-[18px] text-base text-white border border-[#333333]"
               placeholder="Username"
               placeholderTextColor="#B3B3B3"
               autoCapitalize="none"
@@ -80,7 +80,7 @@ export default function RegisterScreen() {
               onChangeText={setUsername}
             />
             <TextInput
-              style={styles.input}
+              className="bg-[#1E1E1E] rounded-xl px-4 py-[18px] text-base text-white border border-[#333333]"
               placeholder="Email address"
               placeholderTextColor="#B3B3B3"
               keyboardType="email-address"
@@ -89,7 +89,7 @@ export default function RegisterScreen() {
               onChangeText={setEmail}
             />
             <TextInput
-              style={styles.input}
+              className="bg-[#1E1E1E] rounded-xl px-4 py-[18px] text-base text-white border border-[#333333]"
               placeholder="Password"
               placeholderTextColor="#B3B3B3"
               secureTextEntry
@@ -99,13 +99,13 @@ export default function RegisterScreen() {
           </View>
 
           {/* Actions */}
-          <View style={styles.actionGroup}>
+          <View className="gap-4">
             <ThemeButton title="Sign Up" onPress={handleRegister} />
             
-            <View style={styles.divider}>
-              <View style={styles.line} />
-              <Text style={styles.dividerText}>OR</Text>
-              <View style={styles.line} />
+            <View className="flex-row items-center my-2">
+              <View className="flex-1 h-[1px] bg-[#333333]" />
+              <Text className="text-[#B3B3B3] px-4 text-sm font-semibold">OR</Text>
+              <View className="flex-1 h-[1px] bg-[#333333]" />
             </View>
 
             <ThemeButton 
@@ -117,10 +117,10 @@ export default function RegisterScreen() {
           </View>
 
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
+          <View className="flex-row justify-center mt-10">
+            <Text className="text-[#B3B3B3] text-sm">Already have an account? </Text>
             <TouchableOpacity onPress={() => router.back()}>
-              <Text style={styles.linkText}>Log in</Text>
+              <Text className="text-[#BB86FC] text-sm font-bold">Log in</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -128,84 +128,3 @@ export default function RegisterScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#121212', // Primary background
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  formContainer: {
-    width: '100%',
-    marginBottom: 60, // Offset upwards
-  },
-  headerContainer: {
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#B3B3B3',
-  },
-  inputGroup: {
-    marginBottom: 24,
-    gap: 16,
-  },
-  input: {
-    backgroundColor: '#1E1E1E', // Surface color
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    fontSize: 16,
-    color: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#333333',
-  },
-  errorText: {
-    color: '#CF6679', // Material Design error color
-    fontSize: 14,
-    marginBottom: -8,
-  },
-  actionGroup: {
-    gap: 16,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#333333',
-  },
-  dividerText: {
-    color: '#B3B3B3',
-    paddingHorizontal: 16,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
-  footerText: {
-    color: '#B3B3B3',
-    fontSize: 14,
-  },
-  linkText: {
-    color: '#BB86FC',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});

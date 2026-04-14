@@ -1,11 +1,11 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, Animated, ViewStyle, TextStyle } from 'react-native';
+import { Pressable, Text, Animated, ViewStyle, TextStyle } from 'react-native';
 
 interface ThemeButtonProps {
   title: string;
   onPress: () => void;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+  style?: ViewStyle | any;
+  textStyle?: TextStyle | any;
   variant?: 'primary' | 'outline';
   icon?: React.ReactNode;
 }
@@ -35,44 +35,16 @@ export function ThemeButton({ title, onPress, style, textStyle, variant = 'prima
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={onPress}
-        style={[styles.button, isPrimary ? styles.primary : styles.outline]}
+        className={`rounded-xl flex-row justify-center items-center py-4 px-6 w-full ${isPrimary ? 'bg-[#BB86FC]' : 'bg-transparent border border-[#B3B3B3]'}`}
       >
         {icon}
-        <Text style={[styles.text, isPrimary ? styles.primaryText : styles.outlineText, textStyle, icon ? { marginLeft: 10 } : null]}>
+        <Text 
+          style={[textStyle, icon ? { marginLeft: 10 } : null]} 
+          className={`text-base font-bold ${isPrimary ? 'text-[#121212]' : 'text-white'}`}
+        >
           {title}
         </Text>
       </Pressable>
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    width: '100%',
-  },
-  primary: {
-    backgroundColor: '#BB86FC',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#B3B3B3',
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '700',
-    fontFamily: 'System', // Later can change to Inter/Roboto
-  },
-  primaryText: {
-    color: '#121212', // Dark text as per design guidelines
-  },
-  outlineText: {
-    color: '#FFFFFF',
-  },
-});
