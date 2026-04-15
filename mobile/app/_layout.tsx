@@ -13,7 +13,9 @@ export default function Layout() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="register" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="home" />
       </Stack>
     </>
   );

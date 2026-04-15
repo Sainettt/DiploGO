@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import { ThemeButton } from '../src/components/ThemeButton';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemeButton } from '../../src/components/ThemeButton';
 import { AntDesign } from '@expo/vector-icons';
 
-import { authApi } from '../src/api/auth.api';
+import { authApi } from '../../src/api/auth.api';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -39,9 +40,8 @@ export default function RegisterScreen() {
 
     try {
       const response = await authApi.register({ username, email, password });
-      console.log('Registered successfully', response);
-      // Optional: Save token or navigate to main screen
-      router.replace('/'); 
+      await AsyncStorage.setItem('jwt_token', response.access_token);
+      router.replace('/onboarding/purpose');
     } catch (e) {
       console.error('Registration failed:', e);
       setError('Registration failed. Username or email may already be in use.');
@@ -53,11 +53,11 @@ export default function RegisterScreen() {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       className="flex-1 bg-[#121212]"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView 
+      <ScrollView
         contentContainerClassName="grow justify-center px-6"
         showsVerticalScrollIndicator={false}
       >
@@ -101,25 +101,25 @@ export default function RegisterScreen() {
           {/* Actions */}
           <View className="gap-4">
             <ThemeButton title="Sign Up" onPress={handleRegister} />
-            
+
             <View className="flex-row items-center my-2">
               <View className="flex-1 h-[1px] bg-[#333333]" />
               <Text className="text-[#B3B3B3] px-4 text-sm font-semibold">OR</Text>
               <View className="flex-1 h-[1px] bg-[#333333]" />
             </View>
 
-            <ThemeButton 
-              title="Sign up with Google" 
-              variant="outline" 
+            <ThemeButton
+              title="Sign up with Google"
+              variant="outline"
               icon={<AntDesign name="google" size={20} color="#FFFFFF" />}
-              onPress={handleGoogleRegister} 
+              onPress={handleGoogleRegister}
             />
           </View>
 
           {/* Footer */}
           <View className="flex-row justify-center mt-10">
             <Text className="text-[#B3B3B3] text-sm">Already have an account? </Text>
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity onPress={() => router.replace('/login')}>
               <Text className="text-[#BB86FC] text-sm font-bold">Log in</Text>
             </TouchableOpacity>
           </View>

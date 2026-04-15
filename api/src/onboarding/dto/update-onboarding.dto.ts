@@ -14,5 +14,6 @@ export class UpdateOnBoardingDto {
   pushNotifications?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   onBoardingCompleted?: boolean;
 }

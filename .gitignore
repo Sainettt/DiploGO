@@ -127,3 +127,6 @@ dist
 
 # Prisma
 api/prisma/migrations/
+
+# Claude
+.claude/
