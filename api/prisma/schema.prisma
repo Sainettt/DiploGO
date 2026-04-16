@@ -7,6 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============== ENUMS ==============
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuestionSource {
+  MANUAL
+  AI
+  IMPORTED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  OPEN_TEXT
+}
+
+// ============== USER ==============
+
 model User {
   id                 String              @id @default(uuid())
   email              String              @unique
@@ -15,6 +38,14 @@ model User {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   onBoardingSettings OnBoardingSettings?
+
+  topics        Topic[]
+  sessions      StudySession[]
+  attempts      QuestionAttempt[]
+  questionStats UserQuestionStat[]
+  topicStats    UserTopicStat[]
+  streak        Streak?
+  dailyActivity DailyActivity[]
 }
 
 model OnBoardingSettings {
@@ -25,4 +56,171 @@ model OnBoardingSettings {
   dailyTimeSpent      Int?
   pushNotifications   Boolean? @default(false)
   onBoardingCompleted Boolean  @default(false)
+}
+
+// ============== CONTENT ==============
+
+model Topic {
+  id          String     @id @default(uuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  icon        String?
+  color       String?
+  difficulty  Difficulty @default(MEDIUM)
+  isPublic    Boolean    @default(false)
+  isArchived  Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  questions Question[]
+  sessions  StudySession[]
+  stats     UserTopicStat[]
+
+  @@index([userId, isArchived])
+}
+
+model Question {
+  id          String         @id @default(uuid())
+  topicId     String
+  topic       Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  text        String
+  explanation String?
+  type        QuestionType   @default(SINGLE_CHOICE)
+  source      QuestionSource @default(MANUAL)
+  difficulty  Difficulty     @default(MEDIUM)
+  aiPrompt    String?
+  aiModel     String?
+  isArchived  Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  answers   Answer[]
+  attempts  QuestionAttempt[]
+  userStats UserQuestionStat[]
+
+  @@index([topicId, isArchived])
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  isCorrect  Boolean  @default(false)
+  order      Int      @default(0)
+
+  @@index([questionId])
+}
+
+// ============== EVENTS ==============
+
+model StudySession {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId        String?
+  topic          Topic?    @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+  durationSec    Int?
+  totalQuestions Int       @default(0)
+  correctCount   Int       @default(0)
+  wrongCount     Int       @default(0)
+  score          Int       @default(0)
+
+  attempts QuestionAttempt[]
+
+  @@index([userId, startedAt])
+}
+
+model QuestionAttempt {
+  id                String        @id @default(uuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId        String
+  question          Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  sessionId         String?
+  session           StudySession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  isCorrect         Boolean
+  timeSpentMs       Int?
+  selectedAnswerIds String[]
+  textAnswer        String?
+  answeredAt        DateTime      @default(now())
+
+  @@index([userId, answeredAt])
+  @@index([userId, questionId])
+  @@index([questionId])
+}
+
+// ============== AGGREGATES ==============
+
+model UserQuestionStat {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  totalAttempts   Int       @default(0)
+  correctAttempts Int       @default(0)
+  wrongAttempts   Int       @default(0)
+  avgTimeMs       Int?
+  lastAnsweredAt  DateTime?
+  lastWasCorrect  Boolean?
+  masteryScore    Int       @default(0)
+  isProblematic   Boolean   @default(false)
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([userId, questionId])
+  @@index([userId, isProblematic])
+  @@index([userId, masteryScore])
+}
+
+model UserTopicStat {
+  id                     String    @id @default(uuid())
+  userId                 String
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId                String
+  topic                  Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  totalSessions          Int       @default(0)
+  totalQuestionsAnswered Int       @default(0)
+  correctAnswers         Int       @default(0)
+  wrongAnswers           Int       @default(0)
+  totalTimeSpentSec      Int       @default(0)
+  completionRate         Float     @default(0)
+  masteryScore           Int       @default(0)
+  lastStudiedAt          DateTime?
+  updatedAt              DateTime  @updatedAt
+
+  @@unique([userId, topicId])
+  @@index([userId, lastStudiedAt])
+}
+
+// ============== STREAKS & ACTIVITY ==============
+
+model Streak {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak    Int       @default(0)
+  longestStreak    Int       @default(0)
+  lastActiveDate   DateTime? @db.Date
+  freezesAvailable Int       @default(0)
+  updatedAt        DateTime  @updatedAt
+}
+
+model DailyActivity {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date              DateTime @db.Date
+  questionsAnswered Int      @default(0)
+  correctAnswers    Int      @default(0)
+  timeSpentSec      Int      @default(0)
+  sessionsCount     Int      @default(0)
+  goalMet           Boolean  @default(false)
+
+  @@unique([userId, date])
+  @@index([userId, date])
 }
