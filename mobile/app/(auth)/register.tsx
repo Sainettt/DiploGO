@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeButton } from '../../src/components/ThemeButton';
 import { AntDesign } from '@expo/vector-icons';
 
 import { authApi } from '../../src/api/auth.api';
+import { onboardingApi } from '../../src/api/onboarding.api';
+import { useGoogleAuth, loginWithGoogle } from '../../src/api/oauth.api';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -13,6 +24,48 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const { request, response, promptAsync } = useGoogleAuth();
+
+  // Navigate based on onboarding completion status
+  const navigateAfterAuth = async () => {
+    const settings = await onboardingApi.getOnBoarding().catch(() => null);
+    if (settings?.onBoardingCompleted) {
+      router.replace('/home');
+    } else {
+      router.replace('/onboarding/purpose');
+    }
+  };
+
+  // Handle Google OAuth response
+  useEffect(() => {
+    if (!response) return;
+
+    if (response.type === 'success') {
+      const idToken = response.authentication?.idToken;
+      if (idToken) {
+        (async () => {
+          try {
+            await loginWithGoogle(idToken);
+            await navigateAfterAuth();
+          } catch {
+            setError('Google sign-up failed. Please try again.');
+          } finally {
+            setGoogleLoading(false);
+          }
+        })();
+      } else {
+        setError('Google sign-up failed: no token received.');
+        setGoogleLoading(false);
+      }
+    } else if (response.type === 'error') {
+      setError('Google sign-up failed. Please try again.');
+      setGoogleLoading(false);
+    } else if (response.type === 'cancel' || response.type === 'dismiss') {
+      setGoogleLoading(false);
+    }
+  }, [response]);
 
   const handleRegister = async () => {
     setError('');
@@ -48,8 +101,10 @@ export default function RegisterScreen() {
     }
   };
 
-  const handleGoogleRegister = () => {
-    console.log('Google Register Triggered');
+  const handleGooglePress = () => {
+    setError('');
+    setGoogleLoading(true);
+    promptAsync();
   };
 
   return (
@@ -109,10 +164,17 @@ export default function RegisterScreen() {
             </View>
 
             <ThemeButton
-              title="Sign up with Google"
+              title={googleLoading ? 'Connecting...' : 'Sign up with Google'}
               variant="outline"
-              icon={<AntDesign name="google" size={20} color="#FFFFFF" />}
-              onPress={handleGoogleRegister}
+              icon={
+                googleLoading ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <AntDesign name="google" size={20} color="#FFFFFF" />
+                )
+              }
+              onPress={handleGooglePress}
+              disabled={!request || googleLoading}
             />
           </View>
 
