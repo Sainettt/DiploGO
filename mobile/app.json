@@ -14,13 +14,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.diplogo.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.diplogo.app",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
@@ -29,6 +31,12 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "88ad7bed-1d15-4ea5-9c6c-fb4f3271f700"
+      }
+    }
   }
 }
