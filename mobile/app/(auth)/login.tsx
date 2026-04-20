@@ -41,7 +41,10 @@ export default function LoginScreen() {
     if (!response) return;
 
     if (response.type === 'success') {
+      console.log(response.type);
       const idToken = response.authentication?.idToken;
+      console.log(response.authentication)
+      console.log(idToken);
       if (idToken) {
         (async () => {
           try {
