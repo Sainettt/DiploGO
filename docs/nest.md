@@ -10,7 +10,7 @@ This directory (when `api` is created) contains the RESTful (or GraphQL) API to 
 ## Module Structure
 The NestJS application will be divided by logical domains (Modules):
 
-1. **AuthModule**: Registration, login (JWT).
+1. **AuthModule**: Registration, login (JWT), and Google OAuth via `POST /auth/google` (see [`oauth.md`](./oauth.md)). `id_token` verification is done server-side with `google-auth-library`; the API then issues its own JWT.
 2. **UsersModule**: User profiles, managing statistics and streaks.
 3. **TopicsModule**: Creating, deleting, editing topics.
 4. **QuestionsModule**: CRUD for questions (with an endpoint for AI question generation).

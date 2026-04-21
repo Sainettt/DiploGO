@@ -12,13 +12,16 @@ This directory (when `mobile` is created) contains the client part of the DiploG
 
 `mobile/`
 - `assets/` — Images, fonts, and icons.
+- `app/` — File-based routes (Expo Router). `(auth)/login.tsx`, `(auth)/register.tsx`, `onboarding/*`, `home`.
 - `src/`
   - `components/` — Reusable elements (Buttons, Cards, Inputs).
-  - `screens/` — Main screens (Login, Home, TopicDetails, GameSession).
-  - `navigation/` — React Navigation configuration (Stack, Tabs).
-  - `api/` — Services for making backend calls.
+  - `hooks/` — Shared React hooks (e.g. `useGoogleSignIn` — encapsulates the Google OAuth response handling used by both login and register screens).
+  - `api/` — Services for making backend calls (`auth.api.ts`, `oauth.api.ts`, `onboarding.api.ts`, `api.client.ts`).
   - `store/` or `context/` — State management (Zustand/Redux/Context API).
   - `utils/` — Helpers (time formatting, calculations).
+
+## Google OAuth
+See [`oauth.md`](./oauth.md) for the end-to-end flow (client → Google → our `/auth/google` → our JWT) and required env vars.
 
 ## Best Practices
 1. **Absolute paths**: Configure `babel.config.js` and `tsconfig.json` to use aliases (e.g., `~components/Button`).

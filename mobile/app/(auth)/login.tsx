@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { authApi } from '../../src/api/auth.api';
 import { onboardingApi } from '../../src/api/onboarding.api';
-import { useGoogleAuth, loginWithGoogle } from '../../src/api/oauth.api';
+import { useGoogleSignIn } from '../../src/hooks/useGoogleSignIn';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -24,49 +24,14 @@ export default function LoginScreen() {
   const [error, setError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const { request, response, promptAsync } = useGoogleAuth();
-
-  // Navigate based on onboarding completion status
-  const navigateAfterAuth = async () => {
-    const settings = await onboardingApi.getOnBoarding().catch(() => null);
-    if (settings?.onBoardingCompleted) {
-      router.replace('/home');
-    } else {
-      router.replace('/onboarding/purpose');
-    }
-  };
-
-  // Handle Google OAuth response
-  useEffect(() => {
-    if (!response) return;
-
-    if (response.type === 'success') {
-      console.log(response.type);
-      const idToken = response.authentication?.idToken;
-      console.log(response.authentication)
-      console.log(idToken);
-      if (idToken) {
-        (async () => {
-          try {
-            await loginWithGoogle(idToken);
-            await navigateAfterAuth();
-          } catch {
-            setError('Google login failed. Please try again.');
-          } finally {
-            setGoogleLoading(false);
-          }
-        })();
-      } else {
-        setError('Google login failed: no token received.');
-        setGoogleLoading(false);
-      }
-    } else if (response.type === 'error') {
-      setError('Google login failed. Please try again.');
-      setGoogleLoading(false);
-    } else if (response.type === 'cancel' || response.type === 'dismiss') {
-      setGoogleLoading(false);
-    }
-  }, [response]);
+  const { request, signIn } = useGoogleSignIn({
+    labels: {
+      failed: 'Google login failed. Please try again.',
+      noToken: 'Google login failed: no token received.',
+    },
+    setError,
+    setLoading: setGoogleLoading,
+  });
 
   const handleLogin = async () => {
     setError('');
@@ -84,7 +49,8 @@ export default function LoginScreen() {
     try {
       const response = await authApi.login({ email, password });
       await AsyncStorage.setItem('jwt_token', response.access_token);
-      await navigateAfterAuth();
+      const settings = await onboardingApi.getOnBoarding().catch(() => null);
+      router.replace(settings?.onBoardingCompleted ? '/home' : '/onboarding/purpose');
     } catch (e: any) {
       const msg = e?.response?.data?.message;
       if (typeof msg === 'string' && msg.includes('Google Sign-In')) {
@@ -93,12 +59,6 @@ export default function LoginScreen() {
         setError('Login failed. Please check your credentials.');
       }
     }
-  };
-
-  const handleGooglePress = () => {
-    setError('');
-    setGoogleLoading(true);
-    promptAsync();
   };
 
   return (
@@ -152,7 +112,7 @@ export default function LoginScreen() {
                 <AntDesign name="google" size={20} color="#FFFFFF" />
               )
             }
-            onPress={handleGooglePress}
+            onPress={signIn}
             disabled={!request || googleLoading}
           />
         </View>

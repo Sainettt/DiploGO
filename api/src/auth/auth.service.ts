@@ -10,18 +10,21 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthDto } from './dto/google-auth.dto';
 import * as bcrypt from 'bcrypt';
-import { OAuth2Client } from 'google-auth-library';
+
+interface GoogleUserInfo {
+  sub: string;
+  email: string;
+  name?: string;
+  picture?: string;
+  email_verified?: boolean;
+}
 
 @Injectable()
 export class AuthService {
-  private googleClient: OAuth2Client;
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) {
-    this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-  }
+  ) {}
 
   async register(dto: RegisterDto) {
     const existingUser = await this.prisma.user.findUnique({
@@ -70,21 +73,28 @@ export class AuthService {
   }
 
   async googleAuth(dto: GoogleAuthDto) {
-    const ticket = await this.googleClient
-      .verifyIdToken({
-        idToken: dto.idToken,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      })
-      .catch(() => {
-        throw new UnauthorizedException('Invalid Google token');
-      });
+    // Native Android/iOS OAuth clients do not return id_token, only access_token.
+    // We verify the access_token by calling Google's userinfo endpoint server-side.
+    const userinfoRes = await fetch(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: { Authorization: `Bearer ${dto.accessToken}` },
+      },
+    ).catch(() => {
+      throw new UnauthorizedException('Failed to reach Google');
+    });
 
-    const payload = ticket.getPayload();
-    if (!payload?.email) {
+    if (!userinfoRes.ok) {
+      throw new UnauthorizedException('Invalid Google token');
+    }
+
+    const userInfo: GoogleUserInfo = await userinfoRes.json();
+
+    if (!userInfo.email) {
       throw new UnauthorizedException('Google token missing email');
     }
 
-    const { email, sub: googleId, name, picture } = payload;
+    const { email, sub: googleId, name, picture } = userInfo;
 
     let user = await this.prisma.user.findUnique({ where: { email } });
 

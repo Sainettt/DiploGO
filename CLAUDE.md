@@ -1,7 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
 DiploGO is a gamified learning platform (diploma project). It's a monorepo with two main packages:
