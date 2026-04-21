@@ -37,6 +37,7 @@ model User {
   passHash           String?
   googleId           String?             @unique
   avatarUrl          String?
+  expoPushToken      String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   onBoardingSettings OnBoardingSettings?
@@ -53,7 +54,7 @@ model User {
 model OnBoardingSettings {
   id                  String   @id @default(uuid())
   userId              String   @unique
-  user                User     @relation(fields: [userId], references: [id])
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   purpose             String?
   dailyTimeSpent      Int?
   pushNotifications   Boolean? @default(false)

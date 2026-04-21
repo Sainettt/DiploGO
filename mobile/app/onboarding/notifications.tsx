@@ -1,14 +1,24 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Animated } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, Animated, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ThemeButton } from '../../src/components/ThemeButton';
 import { onboardingApi } from '../../src/api/onboarding.api';
+import { userApi } from '../../src/api/user.api';
+import {
+  requestNotificationPermissions,
+  scheduleDailyReminders,
+  getExpoPushToken,
+  cancelDailyReminders,
+} from '../../src/services/notifications';
+
+const IS_WEB = Platform.OS === 'web';
 
 export default function OnboardingNotificationsScreen() {
   const router = useRouter();
   const { purpose, dailyTime } = useLocalSearchParams<{ purpose: string; dailyTime: string }>();
   const progressAnim = useRef(new Animated.Value(0.66)).current;
   const bellAnim = useRef(new Animated.Value(1)).current;
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     Animated.timing(progressAnim, {
@@ -17,13 +27,17 @@ export default function OnboardingNotificationsScreen() {
       useNativeDriver: false,
     }).start();
 
-    // Bell pulse animation
     Animated.loop(
       Animated.sequence([
         Animated.timing(bellAnim, { toValue: 1.1, duration: 700, useNativeDriver: true }),
         Animated.timing(bellAnim, { toValue: 1, duration: 700, useNativeDriver: true }),
       ])
     ).start();
+
+    // Web doesn't support local notifications — skip this step automatically.
+    if (IS_WEB) {
+      finish(false);
+    }
   }, []);
 
   const finish = async (pushNotifications: boolean) => {
@@ -41,15 +55,44 @@ export default function OnboardingNotificationsScreen() {
   };
 
   const handleAllow = async () => {
-    // TODO: call expo-notifications requestPermissionsAsync() here
-    // import * as Notifications from 'expo-notifications';
-    // await Notifications.requestPermissionsAsync();
-    await finish(true);
+    if (busy) return;
+    setBusy(true);
+    try {
+      const granted = await requestNotificationPermissions();
+
+      if (granted) {
+        await scheduleDailyReminders();
+
+        const token = await getExpoPushToken();
+        if (token) {
+          await userApi.updatePushToken(token).catch((e) => {
+            console.warn('Failed to register push token:', e);
+          });
+        }
+
+        await finish(true);
+      } else {
+        await finish(false);
+      }
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleSkip = async () => {
-    await finish(false);
+    if (busy) return;
+    setBusy(true);
+    try {
+      await cancelDailyReminders().catch(() => null);
+      await userApi.updatePushToken(null).catch(() => null);
+      await finish(false);
+    } finally {
+      setBusy(false);
+    }
   };
+
+  // On web this screen auto-redirects — render nothing to avoid a flash.
+  if (IS_WEB) return null;
 
   return (
     <View className="flex-1 bg-[#121212]">
@@ -65,7 +108,6 @@ export default function OnboardingNotificationsScreen() {
       </View>
 
       <View className="flex-1 px-6 items-center justify-center">
-        {/* Bell icon */}
         <Animated.View
           style={{
             transform: [{ scale: bellAnim }],
@@ -81,7 +123,6 @@ export default function OnboardingNotificationsScreen() {
           <Text style={{ fontSize: 44 }}>🔔</Text>
         </Animated.View>
 
-        {/* Text */}
         <Text className="text-[28px] font-bold text-white text-center mb-4">
           Never miss a day
         </Text>
@@ -90,10 +131,18 @@ export default function OnboardingNotificationsScreen() {
         </Text>
       </View>
 
-      {/* Actions */}
       <View className="px-6 pb-10 gap-4">
-        <ThemeButton title="Allow Notifications" onPress={handleAllow} />
-        <ThemeButton title="Maybe Later" variant="outline" onPress={handleSkip} />
+        <ThemeButton
+          title={busy ? 'Setting up...' : 'Allow Notifications'}
+          onPress={handleAllow}
+          disabled={busy}
+        />
+        <ThemeButton
+          title="Maybe Later"
+          variant="outline"
+          onPress={handleSkip}
+          disabled={busy}
+        />
       </View>
     </View>
   );
