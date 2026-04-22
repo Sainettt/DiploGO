@@ -19,6 +19,12 @@ interface GoogleUserInfo {
   email_verified?: boolean;
 }
 
+interface GoogleTokenInfo {
+  aud: string;
+  email?: string;
+  error_description?: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -73,6 +79,22 @@ export class AuthService {
   }
 
   async googleAuth(dto: GoogleAuthDto) {
+    const allowedClientIds = (process.env.GOOGLE_CLIENT_IDS ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+
+    if (allowedClientIds.length > 0) {
+      const tokenInfoRes = await fetch(
+        `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${dto.accessToken}`,
+      ).catch(() => {
+        throw new UnauthorizedException('Failed to reach Google');
+      });
+
+      const tokenInfo: GoogleTokenInfo = await tokenInfoRes.json();
+
+      if (!tokenInfoRes.ok || !allowedClientIds.includes(tokenInfo.aud)) {
+        throw new UnauthorizedException('Invalid Google token audience');
+      }
+    }
+
     // Native Android/iOS OAuth clients do not return id_token, only access_token.
     // We verify the access_token by calling Google's userinfo endpoint server-side.
     const userinfoRes = await fetch(

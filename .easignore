@@ -1,0 +1,11 @@
+/api
+/docs
+/docker-compose.yml
+/README.md
+/CLAUDE.md
+node_modules
+.expo
+.env*
+*.log
+dist
+build
