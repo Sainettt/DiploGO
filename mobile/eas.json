@@ -8,14 +8,30 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "sdk-52"
+      },
+      "ios": {
+        "image": "sdk-52"
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "image": "sdk-52"
+      },
+      "ios": {
+        "image": "sdk-52"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "image": "sdk-52"
+      },
+      "ios": {
+        "image": "sdk-52"
+      }
     }
   },
   "submit": {
