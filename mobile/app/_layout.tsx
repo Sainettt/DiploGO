@@ -81,6 +81,7 @@ export default function Layout() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="topic-create" options={{ presentation: 'modal' }} />
       </Stack>
     </>
   );

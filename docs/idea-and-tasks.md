@@ -12,13 +12,14 @@ Users can:
 ## Roadmap (Tasks)
 
 ### Phase 1: MVP (Minimum Viable Product)
-- [ ] Basic user registration / authentication.
-- [ ] Topic CRUD (create, delete, edit).
-- [ ] Interface for manually writing questions.
+- [x] Basic user registration / authentication.
+- [x] Topic CRUD (create, list, delete) — see `api/src/topics/`.
+- [x] Interface for manually writing questions — `mobile/app/topic-create/manual.tsx`.
 - [ ] Game screen (displaying question, answer options, result).
 
 ### Phase 2: AI & Gamification
-- [ ] Integration of an AI provider (OpenAI / Anthropic / Gemini) to automatically generate topic questions.
+- [x] AI provider abstraction (`api/src/ai/`) with stub fallback and Anthropic adapter — see `docs/ai-integration.md`.
+- [ ] Other providers (OpenAI / Gemini) plugged in via the same `AiProvider` interface.
 - [ ] Implementation of the **Streaks** system (user retention).
 - [ ] Global Progress Bar for a topic (how well the topic has been learned).
 - [ ] Animations and rich UI for the answering process.
